@@ -1,0 +1,30 @@
+   10 *KEY0MODE7|MVDU14|ML.|M
+   20 *KEY1RUN|M
+   30 *KEY2REN.|M
+   40 *KEY3P.P%-&A00|M
+   50 *KEY10PAGE=&3000|MOLD|M*FX12,2|M
+   60 stop=&7D:ybot=&80:level=&87
+   70 newd=&89:edge=&8B:keys=&8D
+   80 shoy=&A5:shot=&A6:bits=&A7
+   90 shox=&B0:shos=&B4
+  100 page=&262
+  110 ret=&B6:sss=&AE:ppp=&C8:qqq=&EF
+  120 PIXEL=&1B60
+  130 SPRITE=&1BA6:NOISE=&21C0
+  140 OSB=&FFF4
+  150 FORA%=0TO2STEP2:P%=&A00:[OPTA%
+  160 .NOCHAN LDA#129:TAY:LDXpage:BNEnoiseon:LDX#qqq:JSROSB:TYA:BPLfree:STApage:RTS
+  170 .noiseon LDX#sss:JSROSB:TYA:BPLfree:LDA#0:STApage:RTS
+  180 .FREZE LDA#129:TAY:LDX#ppp:JSROSB:TYA:BPLfree:LDA#13:LDX#4:JSROSB
+  190 JSRkey:BMIP%-3:JSRkey:BPLP%-3:JSRkey:BMIP%-3:LDA#14:LDX#4:JMP(&20A)
+  200 .key LDA#129:TAY:LDX#ppp:JSROSB:TYA:.free RTS:.cxb EQUW&FC04
+  210 .FIRE LDAshos:BNEuda:LDAkeys:BEQjoy:LDA#129:TAY:LDX#ret:JSROSB:TYA:BPLuda
+  220 .new LDYybot:DEY:DEY:STYshoy:LDXstop:LDAcxb-15,X:STAbyte+1:CLC:ADCedge:STAshox:TAX:JSRPIXEL:BNEback
+  230 LDA#21:STAshos:LDXshox:LDYshoy:JSRSPRITE:LDXnewd:BEQnoise:DECnewd:.noise LDA#4:JSRNOISE:LDA#5:JMPNOISE
+  240 .ZERO LDX#1:STXbits:DEX:STXshos:STXshos+1:STXshos+2:STXshos+3:.back RTS
+  250 .joy LDA#128:LDX#0:JSROSB:TXA:AND#1:BNEnew:RTS
+  260 .uda DECbits:BNEback:JSRWIPE:LDX#2:STXbits:.not LDYshos,X:BEQinc:INY:.inc STYshos+1,X:LDAshox,X:STAshox+1,X
+  270 DEX:BPLnot:CLC:.byte ADC#0:STAshox:CMP#80:BCSZERO:TAX:LDYshoy:JSRPIXEL:BNEZERO
+  280 .WIPE LDX#3:.wip LDAshos,X:BEQwipn:LDYshoy:PHA:STXshot:LDAshox,X:TAX:PLA:JSRSPRITE:LDXshot:.wipn DEX:BPLwip:RTS
+  290 ]:NEXT
+

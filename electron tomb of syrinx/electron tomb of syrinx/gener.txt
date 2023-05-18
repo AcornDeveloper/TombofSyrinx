@@ -1,0 +1,61 @@
+   10 *KEY0MODE7|MVDU14|ML.310,|M
+   20 *KEY1RUN|M
+   30 *KEY2REN.|M
+   40 *KEY3P.P%-&2A20|M
+   50 *KEY10PAGE=&3000|MOLD|M*FX12,2|M
+   60 rand=&F
+   70 objectx=&30:objecty=&38
+   80 objects=&40:objectc=&48
+   90 objectf=&50:objectd=&58
+  100 objecta=&60
+  110 tempa=&70:tempx=&71:tempy=&72
+  120 tempz=&73:tripe=&78:ybot=&80
+  130 level=&87:edge=&8B:marks=&8C
+  140 holx=&B8:holy=&B9:hols=&BA
+  150 hcou=&BB:xreg=&BC:hole=&BE
+  160 section=&ECE:sectiom=&FCE
+  170 SPRITE=&1B31:NOISE=&2190
+  180 FORA%=0TO2STEP2:P%=&2A20:[OPTA%
+  190 .OBJECT1 LDX#7:LDA#&FF:.minus STAobjects,X:DEX:BPLminus:RTS
+  200 .OBJECT2 LDX#7:.come LDAobjects,X:BMIdont:PHA:STXxreg:LDYobjecty,X:LDAobjectx,X:TAX:PLA:JSRSPRITE:LDXxreg:LDA#&FF:STAobjects,X:.dont DEX:BPLcome:RTS
+  210 .OBJECT3 LDX#7:.scum LDAobjects,X:BMIsub:LDAobjectx,X:SEC:SBC#16:STAobjectx,X:CMP#16:BCSsub:STXxreg:LDYobjecty,X:LDAobjects,X:PHA:LDAobjectx,X:TAX:PLA
+  220 JSRSPRITE:LDXxreg:LDA#&FF:STAobjects,X:.sub DEX:BPLscum:RTS
+  230 .OBJECT4 LDX#7:.moth LDAobjects,X:BMIadd:LDAobjectx,X:CLC:ADC#16:STAobjectx,X:CMP#63:BCCadd:STXxreg:LDYobjecty,X:LDAobjects,X:PHA:LDAobjectx,X:TAX:PLA
+  240 JSRSPRITE:LDXxreg:LDA#&FF:STAobjects,X:.add DEX:BPLmoth:RTS
+  250 .OBJECT5 LDX#7:LDA#&FF:.flys LDYobjects,X:BMIwasp:LDYobjectx,X:CPY#77:BCCwasp:STAobjects,X:.wasp DEX:BPLflys:RTS
+  260 .addr
+  270 EQUWsection:EQUWsection
+  280 EQUWsectiom:EQUWsectiom
+  290 .start
+  300 EQUB0:EQUB10:EQUB10:EQUB0
+  310 .offset EQUD&80802020
+  320 .coory EQUD&242C4A:EQUB&2A
+  330 .data EQUD&2925100C:EQUB&2A
+  340 .init EQUB29:EQUB31:EQUB33:EQUB35:EQUB37:EQUB4:EQUB6:EQUB39
+  350 .eorv EQUB3:EQUB63:EQUB3:EQUB7:EQUB3:EQUB1:EQUB1:EQUB47
+  360 .GENR1 LDAhols:BNEupdate:LDX#7:.gen LDAobjects,X:BMIgener:DEX:BPLgen:.yet RTS
+  370 .update DEChcou:BNEyet:LDX#15:STXhcou:LDXholx:LDYholy:JSRSPRITE:INChols:LDAhols:CMP#29:BEQMONS:LDXholx:LDYholy:JMPSPRITE
+  380 .MONS LDYlevel:DEY:CPY#8:BCCthing:LDArand:AND#7:TAY
+  390 .thing LDXhole:LDAholx:STAobjectx,X:LDAholy:STAobjecty,X
+  400 LDA#3:STAobjectc,X:STAobjecta,X:STAobjectd,X:LDAeorv,Y:STAobjectf,X:LDAinit,Y:STAobjects,X:LDXholx:LDYholy:JSRSPRITE:JMPGENR2
+  410 .gener LDArand:CMPmarks:BCSyet:STXhole:LDArand-1:BMIrandx:AND#3:TAX:JMPsell
+  420 .randx LDYybot:LDXedge:CPX#39:BCCleft:CPY#128:BCCtoph:LDX#2:BNEsell
+  430 .toph LDX#1:BNEsell:.left CPY#128:BCCzero:LDX#3:BNEsell
+  440 .zero LDX#0:.sell STXtempx:TXA:ASLA:TAY
+  450 LDAaddr,Y:STAnewad+1:LDAaddr+1,Y:STAnewad+2
+  460 LDA#10:STAtempy:LDAtripe:SEC:SBC#19:STAtempa
+  470 CLC:ADCstart,X:TAY
+  480 .again LDX#4:.newad LDAnewad,Y
+  490 .look CMPdata,X:BEQfound:DEX:BPLlook:INY
+  500 DECtempy:BNEagain:RTS
+  510 .found LDAcoory,X:CLC:LDXtempx
+  520 ADCoffset,X:STAholy:TYA:SEC:SBCtempa:ASLA:ASLA
+  530 TAX:STXholx:LDYholy
+  540 LDA#25:STAhols:JSRSPRITE:LDA#15:STAhcou:LDA#1:JMPNOISE
+  550 .GENR2 LDA#0:STAhols:LDA#10:JMPNOISE
+  560 .GENR3 LDAhols:BEQcomm:LDAholx:SEC:SBC#16:STAholx:BCCGENR2:RTS
+  570 .GENR4 LDAhols:BEQcomm:LDAholx:CLC:ADC#16:STAholx:CMP#80:BEQGENR2:.comm RTS
+  580 .DICE LDA&F:LSRA:LSRA:LSRA:EOR&11:RORA:ROL&D:ROL&E:ROL&F:ROL&10:ROL&11:LDA&F:RTS
+  590 .GENR5 LDAhols:BEQcomm:LDXholx:LDYholy:JMPSPRITE
+  600 ]:NEXT
+

@@ -1,0 +1,58 @@
+   10 *KEY0MODE7|MVDU14|ML.|M
+   20 *KEY1RUN|M
+   30 *KEY2REN.|M
+   40 *KEY3P.P%-&2C20|M
+   50 *KEY10PAGE=&3000|MOLD|M*FX12,2|M
+   60 objectx=&30:objecty=&38
+   70 objects=&40:objectc=&48
+   80 objectf=&50:objectd=&58
+   90 objecta=&60
+  100 tempa=&70
+  110 ytop=&81:newd=&89
+  120 edge=&8B:enst=&8E
+  130 shox=&B0:shoy=&A5:shos=&B4
+  140 xreg=&BC:keys=&9C
+  150 WIPE=&ADD:ZERO=&A98:SPRITE=&1B31
+  160 EPLO2=&254D:ADD=&26E7
+  170 START=&B00:DELAY=&E5B:CUOFF=&16D3
+  180 NOISE=&2190
+  190 escp=&8F:eee=&DD
+  200 OSW=&FFEE:OSB=&FFF4
+  210 FORA%=0TO2STEP2:P%=&2C20:[OPTA%
+  220 .score
+  230 EQUD&6060505:EQUD7
+  240 EQUD0:EQUD0
+  250 EQUD0:EQUD0
+  260 EQUD&1000000:EQUD&3020201
+  270 EQUD&7040403
+  280 .reset EQUW&216:EQUW&81F:EQUB10:EQUS"RESET":EQUB7
+  290 .REST LDA#129:TAY:LDX#escp:JSROSB:TYA:BPLrest:LDA#15:LDX#0:JSROSB:LDY#0:.pict LDAreset,Y:JSROSW:INY:CPY#11:BNEpict:JSRCUOFF:LDX#99:JSRDELAY:PLA:PLA:JMPSTART
+  300 .rest RTS
+  310 .HIT LDAshos:BEQrest:LDX#7
+  320 .try LDAobjects,X:BMInext
+  330 LDAshoy:CLC:ADC#4:STAtempa
+  340 LDAobjecty,X:CMPtempa:BCSnext
+  350 ADC#10:CMPtempa:BCCnext
+  360 LDYshox:INY:INY:STYtempa
+  370 LDYobjectx,X:DEY:DEY:CPYtempa:BCSnext:TYA
+  380 ADC#8:CMPtempa:BCCnext
+  390 .hitit STXxreg:LDAobjects,X:PHA
+  400 LDYobjecty,X:LDAobjectx,X:TAX:PLA:JSRSPRITE
+  410 JSRWIPE:JSRZERO:LDXxreg:LDYobjects,X:LDA#&FF:STAobjects,X:LDAscore-4,Y:JSRADD
+  420 LDXxreg:LDYobjecty,X:LDAobjectx,X:TAX:JMPEPLO2
+  430 .next DEX:BPLtry:RTS
+  440 .PROX LDX#7:.view LDAobjects,X:BMIprox
+  450 LDAedge:SEC:SBC#5:CMPobjectx,X:BCSprox:ADC#10:CMPobjectx,X:BCCprox
+  460 LDAytop:SBC#8:CMPobjecty,X:BCSprox:ADC#24
+  470 CMPobjecty,X:BCCprox:STXxreg
+  480 LDYobjecty,X:LDAobjects,X:PHA
+  490 LDAobjectx,X:TAX:PLA:JSRSPRITE
+  500 LDAnewd:SEC:SBC#5:BCSokay:LDA#0:.okay STAnewd
+  510 LDXxreg:LDA#&FF:STAobjects,X
+  520 LDYobjecty,X:LDAobjectx,X:TAX:JSREPLO2:LDA#2:JMPNOISE
+  530 .prox DEX:BPLview:.out RTS
+  540 .XTRA1 LDAkeys:BEQout:LDAkeys+1:BEQout:LDAenst:BNEout:LDA#129:TAY:LDX#eee:JSROSB:TYA:BPLout
+  550 LDAnewd:CLC:ADC#28:STAnewd:STAenst:RTS
+  560 .XTRA2 LDA#0:STAenst:RTS
+  570 ]:NEXT
+

@@ -1,0 +1,58 @@
+   10 *KEY0MODE7|MVDU14|ML.230,|M
+   20 *KEY1RUN|M
+   30 *KEY2REN.|M
+   40 *KEY3P.P%-&2D40|M
+   50 *KEY10PAGE=&3000|MOLD|M*FX12,2|M
+   60 objectx=&30:objecty=&38
+   70 objects=&40:objectc=&48
+   80 objectf=&50:objectd=&58
+   90 objecta=&60
+  100 tempa=&70:tempx=&71:tempy=&72
+  110 ybot=&80:level=&87
+  120 edge=&8B:mark=&8C
+  130 xreg=&BC:yreg=&BD
+  140 PIXEL=&1B60:SPRITE=&1BA6
+  150 FORA%=0TO2STEP2:P%=&2D40:[OPTA%
+  160 .dirdatax EQUB0:EQUB3:EQUB4:EQUB4:EQUB0:EQUB-1:EQUB-1:EQUB0
+  170 .dirdatay EQUB-1:EQUB-1:EQUB0:EQUB7:EQUB8:EQUB7:EQUB0:EQUB-1
+  180 .tirdatax EQUB3:EQUB4:EQUB4:EQUB3:EQUB3:EQUB0:EQUB-1:EQUB-1
+  190 .tirdatay EQUB-1:EQUB0:EQUB7:EQUB8:EQUB8:EQUB8:EQUB7:EQUB0
+  200 .directx EQUB0:EQUB1:EQUB1:EQUB1:EQUB0:EQUB-1:EQUB-1:EQUB-1
+  210 .directy EQUB-1:EQUB-1:EQUB0:EQUB1:EQUB1:EQUB1:EQUB0:EQUB-1
+  220 .MOTION LDX#7:.more LDAobjects,X
+  230 BMInactive:STXxreg:JSRBUS:LDXxreg
+  240 .nactive DEX:BPLmore:.back RTS
+  250 .BUS LDY#8:STYtempy:DECobjectc,X
+  260 BPLpchos:LDA#8:STAobjectc,X
+  270 JSRnewdir
+  280 .pchos LDYobjectd,X:STYyreg
+  290 LDAobjectx,X:CLC:ADCdirdatax,Y:PHA
+  300 LDAobjecty,X:CLC:ADCdirdatay,Y:TAY
+  310 PLA:TAX:JSRPIXEL:BNEnotval:LDXxreg
+  320 LDYyreg:LDAobjectx,X:CLC:ADCtirdatax,Y:PHA
+  330 LDAobjecty,X:CLC:ADCtirdatay,Y:TAY
+  340 PLA:TAX:JSRPIXEL:BEQslide
+  350 .notval LDYyreg:LDXxreg:LDAedge:CMPobjectx,X:BCCminus:INY:TYA:AND#7:STAobjectd,X:DECtempy:BEQback:JMPpchos
+  360 .minus DEY:TYA:AND#7:STAobjectd,X:DECtempy:BEQback:JMPpchos
+  370 .nice LDXxreg:LDA#7:STAobjectc,X:LDAyreg:ASLA:STAobjectd,X
+  380 .slide LDXxreg:LDYobjecty,X
+  390 LDAobjects,X:PHA:LDAobjectx,X:TAX
+  400 PLA:JSRSPRITE:LDXxreg:LDAobjects,X
+  410 DECobjecta,X:BPLnoflip:LDY#7:STYobjecta,X:EORobjectf,X:STAobjects,X
+  420 .noflip PHA:LDYobjectd,X
+  430 LDAobjectx,X:CLC:ADCdirectx,Y:STAobjectx,X:PHA
+  440 LDAobjecty,X:CLC:ADCdirecty,Y:STAobjecty,X
+  450 TAY:PLA:TAX:PLA:JMPSPRITE
+  460 .twoy EQUW4:.twox EQUW&602
+  470 .four EQUD&7050103
+  480 .newdir LDAobjecty,X:LSRA:STAtempa:LDAybot:LSRA:SEC:SBCtempa:TAY
+  490 LDAedge:SEC:SBCobjectx,X:STAtempx
+  500 BNEnien:TYA:ROLA:ROLA:AND#1:TAY
+  510 LDAtwoy,Y:STAobjectd,X:RTS
+  520 .nien TYA:BNEothers:ROLtempx:ROLA
+  530 TAY:LDAtwox,Y:STAobjectd,X:RTS
+  540 .others ROLtempx:ROLA:ROLA:AND#3:TAY:LDAfour,Y:STAobjectd,X:RTS
+  550 .frequen EQUD&140F0A07:EQUD&24201D19
+  560 .MARK LDXlevel:CPX#8:BCCscratch:LDX#7:.scratch LDAfrequen,X:STAmark:RTS
+  570 ]:NEXT
+

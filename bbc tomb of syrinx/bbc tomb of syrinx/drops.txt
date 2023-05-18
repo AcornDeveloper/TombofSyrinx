@@ -1,0 +1,21 @@
+   10 REM DROPS
+   20 *K.1RUN|M
+   30 *K.2REN.|M
+   40 *K.4*SAVE"DROPS" 70 +20 74|M
+   50 score=&83
+   60 FORA%=0TO2STEP2
+   70 P%=&70
+   80 [OPTA%
+  100 .drops
+  110 EQUW&2000:EQUW&A00
+  120 .DROPS
+  130 LDY#0:LDX#&26
+  140 .loops
+  150 LDA(drops),Y:STA(drops+2),Y
+  160 INY:BNEloops
+  170 INCdrops+1:INCdrops+3
+  180 DEX:BNEloops
+  190 STXscore:STXscore+1:STXscore+2
+  200 JMP&C00
+  210 ]:NEXT
+
